@@ -11,8 +11,10 @@
 # limitations under the License.
 #
 import os
+import re
 import torch
 
+from num2words import num2words
 from ovos_plugin_manager.templates.tts import TTS
 
 
@@ -184,10 +186,11 @@ class SileroTTSPlugin(TTS):
         super(SileroTTSPlugin, self).__init__(lang, config)
 
         lang = lang.split('-')[0]
-        self.model = self.config.get("model") or next(iter(self.lang_config[lang]))
-        self.voice = self.config.get("voice") or next(
-            iter(self.lang_config[lang][self.model]))
-        self.sample_rate = self.config.get("sample_rate") or 24000
+        self.model = self.config.get("model", default=next(
+            iter(self.lang_config[lang])))
+        self.voice = self.config.get("voice", default=next(
+            iter(self.lang_config[lang][self.model])))
+        self.sample_rate = self.config.get("sample_rate", 24000)
 
         # download and load model
         # self.preload_models()
@@ -217,6 +220,10 @@ class SileroTTSPlugin(TTS):
         model = torch.package.PackageImporter(local_file).load_pickle(
             'tts_models', 'model')
         model.to(device)
+
+        sentence = re.sub('(\\d+(?:\\.\\d+)?)',
+                          lambda m: num2words(m.group(), lang=lang),
+                          sentence)
 
         audio_path = model.save_wav(text=sentence,
                                     speaker=self.voice,
