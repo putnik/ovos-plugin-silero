@@ -1,0 +1,4 @@
+recursive-include ovos_tts_plugin_silero/ *
+recursive-include requirements/ *
+include requirements.txt
+include LICENSE

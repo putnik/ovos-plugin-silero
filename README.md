@@ -1,33 +1,36 @@
-# VK Cloud STT/TTS plugin for Mycroft
+## Description
 
-VK Group (ex-Mail.ru group) is a big Russian company that has their own personal assistant [Marusia](https://marusia.mail.ru/). They allow to use same technologies in their cloud services.
+OVOS TTS plugin for [Silero Models](https://github.com/snakers4/silero-models)
 
-VK Cloud supports two authorisation methods: one time tokens and service tokens without expiration. For now there is only service tokens support.
+This plugin supports only V3 and V4 models. All models available only for non-commercial usage.
 
-I don't really like the response time of the TTS service, but STT works very well. For now, VK Cloud supports only Russian language.
+## Install
 
-## How to use
-1. Register a new VK Cloud account: https://mcs.mail.ru/
-2. Confirm your email and phone number.
-3. You will get 100 free roubles.
-4. Create service token for Cloud Voice.
-5. `mycroft-pip install mycroft-plugin-vk-cloud`
-6. Edit `mycroft.conf` (`mycroft-config edit user`):
+`pip install ovos-tts-plugin-silero`
+
+## Configuration
+
+### Basic
+
+Will be used default model for your language and a first available voice for that model.
+Default sample rate is 24000.
+
 ```json
-"tts": {
-  "module": "vk",
-  "vk": {
-    "service_token": "YOUR_SERVICE_TOKEN",
-    "tempo": 1.15
+  "tts": {
+    "module": "ovos-tts-plugin-silero"
   }
-},
-"stt": {
-  "module": "vk",
-  "vk": {
-    "credential": {
-      "service_token": "YOUR_SERVICE_TOKEN"
+```
+
+### Advanced
+See [models and voices in Silero Models repository](https://github.com/snakers4/silero-models#models-and-speakers)
+
+```json
+  "tts": {
+    "module": "ovos-tts-plugin-silero",
+    "ovos-tts-plugin-silero": {
+      "model": "v4_ru",
+      "voice": "xenia",
+      "sample_rate": 24000
     }
   }
-}
 ```
-`tempo` is optional. Possible values from 0.75 to 1.75, default id 1.0.
